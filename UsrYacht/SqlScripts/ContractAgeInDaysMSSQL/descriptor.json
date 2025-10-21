@@ -1,0 +1,11 @@
+﻿{
+  "SqlScript": {
+    "UId": "57190aad-0f01-9f23-c3fe-0e2d8e822832",
+    "Name": "ContractAgeInDaysMSSQL",
+    "DBEngineType": 0,
+    "InstallType": 0,
+    "ModifiedOnUtc": "\/Date(1760472612000)\/",
+    "BackwardCompatibilityConfirmed": false,
+    "DependsOn": []
+  }
+}
