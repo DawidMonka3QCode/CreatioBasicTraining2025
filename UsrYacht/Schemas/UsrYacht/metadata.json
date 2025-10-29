@@ -29,15 +29,14 @@
   "E5": false
 }
 + MetaData.Schema.D2 {
-  "UId": "291718ee-5e60-3bc5-3572-7c1522e6b9d3",
-  "A2": "UsrLength",
+  "UId": "12055561-082c-bc51-ddd9-880c26cdaa24",
+  "A2": "UsrPrice",
   "A3": "82c6e574-d7b0-40d9-ac12-47d7e33fa2c5",
   "A4": "82c6e574-d7b0-40d9-ac12-47d7e33fa2c5",
   "A5": "46857d44-f558-43b6-b257-b7ae7345a80c",
-  "S2": "ddb3a1ee-07e8-4d62-b7a9-d0e618b00fbd",
-  "E25": true
+  "S2": "5cc8060d-6d10-4773-89fc-8c12d6f659a6"
 }
-~ MetaData.Schema.D2 ["ae0e45ca-c495-4fe7-a39d-3ab7278e1617","e80190a5-03b2-4095-90f7-a193a960adee","ebf6bb93-8aa6-4a01-900d-c6ea67affe21","9928edec-4272-425a-93bb-48743fee4b04","3015559e-cbc6-406a-88af-07f7930be832","3fabd836-6a53-4d8d-9069-6df88d9dae1e","32448c4d-d313-4620-9b8f-a53038685bc4","291718ee-5e60-3bc5-3572-7c1522e6b9d3"]
+~ MetaData.Schema.D2 ["ae0e45ca-c495-4fe7-a39d-3ab7278e1617","e80190a5-03b2-4095-90f7-a193a960adee","ebf6bb93-8aa6-4a01-900d-c6ea67affe21","9928edec-4272-425a-93bb-48743fee4b04","3015559e-cbc6-406a-88af-07f7930be832","3fabd836-6a53-4d8d-9069-6df88d9dae1e","32448c4d-d313-4620-9b8f-a53038685bc4","12055561-082c-bc51-ddd9-880c26cdaa24"]
 = MetaData.Schema.D20.A2 "UsrYachtEvents"
 = MetaData.Schema.D36.A3 "82c6e574-d7b0-40d9-ac12-47d7e33fa2c5"
 = MetaData.Schema.D36.BS1 false

@@ -3,8 +3,8 @@
 	<Group Type="String">
 		<Items>
 			<Item Name="Caption" Value="Yacht" />
-			<Item Name="Columns.UsrLength.Caption" Value="Length" />
 			<Item Name="Columns.UsrName.Caption" Value="Name" />
+			<Item Name="Columns.UsrPrice.Caption" Value="Price per day, USD" />
 		</Items>
 	</Group>
 </Resources>

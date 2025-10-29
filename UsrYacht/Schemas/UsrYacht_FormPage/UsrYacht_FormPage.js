@@ -10,39 +10,52 @@ define("UsrYacht_FormPage", /**SCHEMA_DEPS*/[]/**SCHEMA_DEPS*/, function/**SCHEM
 				}
 			},
 			{
-				"operation": "merge",
-				"name": "CardToggleTabPanel",
-				"values": {
-					"styleType": "default",
-					"bodyBackgroundColor": "primary-contrast-500",
-					"selectedTabTitleColor": "auto",
-					"tabTitleColor": "auto",
-					"underlineSelectedTabColor": "auto",
-					"headerBackgroundColor": "auto"
-				}
+				"operation": "remove",
+				"name": "CardButtonToggleGroup"
 			},
 			{
-				"operation": "merge",
-				"name": "Feed",
-				"values": {
-					"dataSourceName": "PDS",
-					"entitySchemaName": "UsrYacht"
-				}
+				"operation": "remove",
+				"name": "CardToggleTabPanel"
 			},
 			{
-				"operation": "merge",
-				"name": "AttachmentList",
-				"values": {
-					"columns": [
-						{
-							"id": "ae950b25-dcc9-43f1-932d-311d84dcc7d6",
-							"code": "AttachmentListDS_Name",
-							"caption": "#ResourceString(AttachmentListDS_Name)#",
-							"dataValueType": 28,
-							"width": 200
-						}
-					]
-				}
+				"operation": "remove",
+				"name": "FeedTabContainer"
+			},
+			{
+				"operation": "remove",
+				"name": "Feed"
+			},
+			{
+				"operation": "remove",
+				"name": "FeedTabContainerHeaderContainer"
+			},
+			{
+				"operation": "remove",
+				"name": "FeedTabContainerHeaderLabel"
+			},
+			{
+				"operation": "remove",
+				"name": "AttachmentsTabContainer"
+			},
+			{
+				"operation": "remove",
+				"name": "AttachmentList"
+			},
+			{
+				"operation": "remove",
+				"name": "AttachmentsTabContainerHeaderContainer"
+			},
+			{
+				"operation": "remove",
+				"name": "AttachmentsTabContainerHeaderLabel"
+			},
+			{
+				"operation": "remove",
+				"name": "AttachmentAddButton"
+			},
+			{
+				"operation": "remove",
+				"name": "AttachmentRefreshButton"
 			},
 			{
 				"operation": "insert",
@@ -62,6 +75,25 @@ define("UsrYacht_FormPage", /**SCHEMA_DEPS*/[]/**SCHEMA_DEPS*/, function/**SCHEM
 				"parentName": "SideAreaProfileContainer",
 				"propertyName": "items",
 				"index": 0
+			},
+			{
+				"operation": "insert",
+				"name": "Price",
+				"values": {
+					"layoutConfig": {
+						"column": 1,
+						"colSpan": 1,
+						"row": 2,
+						"rowSpan": 1
+					},
+					"type": "crt.NumberInput",
+					"label": "$Resources.Strings.PDS_UsrPrice_1e09sp7",
+					"labelPosition": "auto",
+					"control": "$PDS_UsrPrice_1e09sp7"
+				},
+				"parentName": "SideAreaProfileContainer",
+				"propertyName": "items",
+				"index": 1
 			}
 		]/**SCHEMA_VIEW_CONFIG_DIFF*/,
 		viewModelConfigDiff: /**SCHEMA_VIEW_MODEL_CONFIG_DIFF*/[
@@ -75,7 +107,22 @@ define("UsrYacht_FormPage", /**SCHEMA_DEPS*/[]/**SCHEMA_DEPS*/, function/**SCHEM
 						"modelConfig": {
 							"path": "PDS.UsrName"
 						}
+					},
+					"PDS_UsrPrice_1e09sp7": {
+						"modelConfig": {
+							"path": "PDS.UsrPrice"
+						}
 					}
+				}
+			},
+			{
+				"operation": "merge",
+				"path": [
+					"attributes",
+					"CardState"
+				],
+				"values": {
+					"modelConfig": {}
 				}
 			},
 			{
