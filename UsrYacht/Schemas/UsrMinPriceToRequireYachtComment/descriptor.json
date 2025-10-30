@@ -1,0 +1,14 @@
+﻿{
+  "Descriptor": {
+    "UId": "94108b6d-4ddf-4641-803c-aa722b839184",
+    "Name": "UsrMinPriceToRequireYachtComment",
+    "ModifiedOnUtc": "\/Date(1761827414000)\/",
+    "Parent": {
+      "UId": "27aeadd6-d508-4572-8061-5b55b667c902",
+      "Name": "SysSettings"
+    },
+    "ManagerName": "EntitySchemaManager",
+    "Caption": "Min price",
+    "DependsOn": []
+  }
+}

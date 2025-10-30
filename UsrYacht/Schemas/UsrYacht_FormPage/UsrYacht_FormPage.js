@@ -147,6 +147,29 @@ define("UsrYacht_FormPage", /**SCHEMA_DEPS*/[]/**SCHEMA_DEPS*/, function/**SCHEM
 			},
 			{
 				"operation": "insert",
+				"name": "TicketPrice",
+				"values": {
+					"layoutConfig": {
+						"column": 1,
+						"colSpan": 1,
+						"row": 3,
+						"rowSpan": 1
+					},
+					"type": "crt.NumberInput",
+					"label": "$Resources.Strings.PDS_UsrTicketPrice_my3ux2i",
+					"labelPosition": "auto",
+					"control": "$PDS_UsrTicketPrice_my3ux2i",
+					"visible": true,
+					"readonly": true,
+					"placeholder": "",
+					"tooltip": ""
+				},
+				"parentName": "SideAreaProfileContainer",
+				"propertyName": "items",
+				"index": 2
+			},
+			{
+				"operation": "insert",
 				"name": "Length",
 				"values": {
 					"layoutConfig": {
@@ -416,6 +439,11 @@ define("UsrYacht_FormPage", /**SCHEMA_DEPS*/[]/**SCHEMA_DEPS*/, function/**SCHEM
 						"modelConfig": {
 							"path": "PDS.UsrNumber"
 						}
+					},
+					"PDS_UsrTicketPrice_my3ux2i": {
+						"modelConfig": {
+							"path": "PDS.UsrTicketPrice"
+						}
 					}
 				}
 			},
@@ -475,6 +503,24 @@ define("UsrYacht_FormPage", /**SCHEMA_DEPS*/[]/**SCHEMA_DEPS*/, function/**SCHEM
 					var price = await request.$context.PDS_UsrPrice_1e09sp7;
 					console.log("Price = " + price);
 					request.$context.PDS_UsrComment_rc3r788 = "comment from JS code!";
+					/* Call the next handler if it exists and return its result. */
+					return next?.handle(request);
+				}
+			},
+			{
+				request: "crt.HandleViewModelAttributeChangeRequest",
+				/* The custom implementation of the system query handler. */
+				handler: async (request, next) => {
+      				if (request.attributeName === 'PDS_UsrPrice_1e09sp7' || 		        // if price changed
+					   request.attributeName === 'PDS_UsrPassengersNumber_mmod7v4' ) { 		// or Passenger count changed
+						let price = await request.$context.PDS_UsrPrice_1e09sp7;
+						let passengers = await request.$context.PDS_UsrPassengersNumber_mmod7v4;
+						let ticket_price = 0;
+						if (passengers != 0) {
+							ticket_price = price / passengers;
+						}
+						request.$context.PDS_UsrTicketPrice_my3ux2i = ticket_price;
+					}
 					/* Call the next handler if it exists and return its result. */
 					return next?.handle(request);
 				}
