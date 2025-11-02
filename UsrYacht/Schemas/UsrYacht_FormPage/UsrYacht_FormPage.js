@@ -680,7 +680,25 @@ define("UsrYacht_FormPage", /**SCHEMA_DEPS*/[]/**SCHEMA_DEPS*/, function/**SCHEM
 				"parentName": "GridContainer_m5bii0h",
 				"propertyName": "items",
 				"index": 0
+			},
+
+			/*DODANO*/
+			{
+				"operation": "merge",
+				"name": "Comment",
+				"values": {
+					"validationRules": [
+						{
+							"type": "usr.PriceCommentValidator",
+							"params": {
+								"message": "Comment is required when price is high."
+							}
+						}
+					]
+				}
 			}
+
+			
 		]/**SCHEMA_VIEW_CONFIG_DIFF*/,
 		viewModelConfigDiff: /**SCHEMA_VIEW_MODEL_CONFIG_DIFF*/[
 			{
@@ -705,7 +723,13 @@ define("UsrYacht_FormPage", /**SCHEMA_DEPS*/[]/**SCHEMA_DEPS*/, function/**SCHEM
 									"minValue": 100,
 									"message": "#ResourceString(PriceCannotBeLess100)#"
 								}
-							}
+							},
+					        "PriceCommentRequired": {
+					            "type": "usr.PriceCommentValidator",
+					            "params": {
+					                "message": "Comment is required for this price"
+					            }
+					        }
 						}
 					},
 					"PDS_UsrLength_s0l95xb": {
@@ -817,8 +841,18 @@ define("UsrYacht_FormPage", /**SCHEMA_DEPS*/[]/**SCHEMA_DEPS*/, function/**SCHEM
 								}
 							}
 						}
-					}
-				}
+					},
+					/*DODANO*/
+					// Atrybut do przechowywania wartości z ustawienia systemowego
+			        "MinPriceValue": {
+			            "value": 0
+			        },
+					/*DODANO*/
+			        // Wirtualny atrybut-flaga, który będzie sterował walidatorem
+			        "PDS_UsrCommentRequired": {
+			            "value": false
+			        }
+				},
 			},
 			{
 				"operation": "merge",
@@ -840,7 +874,7 @@ define("UsrYacht_FormPage", /**SCHEMA_DEPS*/[]/**SCHEMA_DEPS*/, function/**SCHEM
 				"values": {
 					"path": "PDS.Id"
 				}
-			}
+			},
 		]/**SCHEMA_VIEW_MODEL_CONFIG_DIFF*/,
 		modelConfigDiff: /**SCHEMA_MODEL_CONFIG_DIFF*/[
 			{
@@ -901,7 +935,89 @@ define("UsrYacht_FormPage", /**SCHEMA_DEPS*/[]/**SCHEMA_DEPS*/, function/**SCHEM
 				}
 			}
 		]/**SCHEMA_MODEL_CONFIG_DIFF*/,
+		/*DODANO equests*/
+		requests: /**SCHEMA_REQUESTS*/{
+			"usr.LoadMinPriceSysSetting": {
+				"type": "crt.LoadDataRequest",
+				"config": {
+					"entityName": "SysSetting",
+					"columns": ["DecimalValue"],
+					"filter": {
+						"column": "Code",
+						"value": "MinPriceToRequireYachtComment"
+					}
+				},
+				"handler": async (request, next) => {
+
+					console.log("%c--- KROK 1: Ładowanie Ustawienia Systemowego ---", "color: blue; font-weight: bold;"); // LOGOWANIE
+					
+					const result = await next?.handle(request);
+					const setting = result?.items?.[0];
+					if (setting) {
+						request.$context.MinPriceValue = setting.DecimalValue;
+						console.log("Sukces! Znaleziono ustawienie. Ustawiono 'MinPriceValue' na:", setting.DecimalValue); // LOGOWANIE
+					}
+					else {
+						console.error("KRYTYCZNY BŁĄD: Nie znaleziono ustawienia systemowego o kodzie 'MinPriceToRequireYachtComment'. Sprawdź, czy istnieje i czy jest w Twoim pakiecie."); // LOGOWANIE
+						request.$context.MinPriceValue = 9999999; // Ustawiamy bardzo wysoką wartość, żeby nic nie wyzwalało walidacji
+					}
+					const price = request.$context.PDS_UsrPrice_1e09sp7;
+					if (price) {
+						const isRequired = price > request.$context.MinPriceValue;
+						request.$context.PDS_UsrCommentRequired = isRequired;
+						console.log(`Wartość początkowa. Cena: ${price}, Próg: ${request.$context.MinPriceValue}, Wymagany: ${isRequired}`); // LOGOWANIE
+					}
+					return result;
+				}
+			}
+		},
 		handlers: /**SCHEMA_HANDLERS*/[
+		/*DODANO*/
+			{
+				request: "crt.HandleViewModelInitRequest",
+				handler: async (request, next) => {
+					// Krok A: Standardowa inicjalizacja.
+					await next?.handle(request);
+					
+					// Krok B: BEZPOŚREDNIE POBRANIE DANYCH W SPOSÓB "FREEDOM UI NATIVE"
+					console.log("%c--- KROK 0: Inicjalizacja. Uruchamiam 'crt.LoadDataRequest'... ---", "color: orange; font-weight: bold;");
+					
+					// Wykonujemy standardowe żądanie Freedom UI do ładowania danych
+					const response = await request.$context.executeRequest({
+						type: "crt.LoadDataRequest",
+						$context: request.$context,
+						config: {
+							entityName: "SysSetting",
+							columns: ["DecimalValue"],
+							filters: {
+								// Definicja filtra w stylu Freedom UI
+								type: "comparison",
+								comparisonType: "equal",
+								leftExpression: {
+									type: "attribute",
+									attribute: "Code"
+								},
+								rightExpression: {
+									type: "parameter",
+									value: "MinPriceToRequireYachtComment"
+								}
+							}
+						}
+					});
+
+					const setting = response?.items?.[0];
+					if (setting) {
+						const valueToSet = setting.DecimalValue;
+						// Bezpośrednie przypisanie do atrybutu
+						request.$context.MinPriceValue = valueToSet;
+						console.log("%c--- KROK 1: SUKCES! Pobrano ustawienie. Próg to: " + valueToSet + " ---", "color: blue; font-weight: bold;");
+					} else {
+						console.error("KRYTYCZNY BŁĄD: Nie znaleziono ustawienia 'MinPriceToRequireYachtComment'.");
+					}
+				}
+			},
+
+			
 			{
 				request: "usr.PushButtonRequest",
 				/* Implementation of the custom query handler. */
@@ -917,7 +1033,6 @@ define("UsrYacht_FormPage", /**SCHEMA_DEPS*/[]/**SCHEMA_DEPS*/, function/**SCHEM
 			},
 			{
 				request: "crt.HandleViewModelAttributeChangeRequest",
-				/* The custom implementation of the system query handler. */
 				handler: async (request, next) => {
       				if (request.attributeName === 'PDS_UsrPrice_1e09sp7' || 		        // if price changed
 					   request.attributeName === 'PDS_UsrPassengersNumber_mmod7v4' ) { 		// or Passenger count changed
@@ -929,6 +1044,25 @@ define("UsrYacht_FormPage", /**SCHEMA_DEPS*/[]/**SCHEMA_DEPS*/, function/**SCHEM
 						}
 						request.$context.PDS_UsrTicketPrice_my3ux2i = ticket_price;
 					}
+					
+					/*DODANO*/
+					if (request.attributeName === "PDS_UsrPrice_1e09sp7") {
+						console.log("%c--- KROK 2: Wykryto zmianę ceny ---", "color: green; font-weight: bold;"); // LOGOWANIE
+						const priceValue = request.value;
+						const minPrice = await request.$context.MinPriceValue;
+						const isRequired = priceValue > minPrice;
+
+						console.log(`Porównanie: Cena wpisana (${priceValue}) > Próg z ustawienia (${minPrice}). Wynik: ${isRequired}`); // LOGOWANIE
+	
+						request.$context.PDS_UsrCommentRequired = isRequired;
+						console.log("Ustawiono flagę 'PDS_UsrCommentRequired' na:", isRequired); 
+						
+						const currentComment = await request.$context.PDS_UsrComment_rc3r788;
+						request.$context.PDS_UsrComment_rc3r788 = currentComment;
+						console.log("Uruchomiono trigger walidacji dla pola komentarza."); // LOGOWANIE
+					}
+					/*-----*/
+					
 					/* Call the next handler if it exists and return its result. */
 					return next?.handle(request);
 				}
@@ -966,6 +1100,31 @@ define("UsrYacht_FormPage", /**SCHEMA_DEPS*/[]/**SCHEMA_DEPS*/, function/**SCHEM
 					}
 				],
 				async: false
+			},
+			"usr.PriceCommentValidator": {
+			    validator: function (config) {
+			        return function (control) {
+			            const comment = (control.value ?? "").toString();
+			            
+			            // Odczyt flagi z kontekstu pola
+			            const isRequired = !!control.$context?.PDS_UsrCommentRequired;
+			            
+			            if (isRequired && (!comment || comment.trim() === "")) {
+			                return {
+			                    "usr.PriceCommentValidator": {
+			                        message: config.message || "Comment is required for this price"
+			                    }
+			                };
+			            }
+			            return null;
+			        };
+			    },
+			    params: [
+			        {
+			            name: "message"
+			        }
+			    ],
+			    async: false
 			}
 		}/**SCHEMA_VALIDATORS*/
 	};

@@ -426,11 +426,6 @@
 			<SpecificVersion>False</SpecificVersion>
 			<Private>False</Private>
 		</Reference>
-		<Reference Include="CrtCopilotStudio">
-			<HintPath>$(RelativePkgFolderPath)/CrtCopilotStudio/$(StandalonePackageAssemblyPath)/CrtCopilotStudio.dll</HintPath>
-			<SpecificVersion>False</SpecificVersion>
-			<Private>False</Private>
-		</Reference>
 		<Reference Include="CrtDataForge">
 			<HintPath>$(RelativePkgFolderPath)/CrtDataForge/$(StandalonePackageAssemblyPath)/CrtDataForge.dll</HintPath>
 			<SpecificVersion>False</SpecificVersion>
@@ -483,6 +478,11 @@
 		</Reference>
 		<Reference Include="XSSProtection">
 			<HintPath>$(RelativePkgFolderPath)/XSSProtection/$(StandalonePackageAssemblyPath)/XSSProtection.dll</HintPath>
+			<SpecificVersion>False</SpecificVersion>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="CrtCopilotStudio">
+			<HintPath>$(RelativePkgFolderPath)/CrtCopilotStudio/$(StandalonePackageAssemblyPath)/CrtCopilotStudio.dll</HintPath>
 			<SpecificVersion>False</SpecificVersion>
 			<Private>False</Private>
 		</Reference>
@@ -574,7 +574,6 @@
 	</ItemGroup>
 	<ItemGroup Label="Standalone package external assembly references" />
 	<ItemGroup Label="Entity Files">
-		<Compile Remove="$(RelativePkgFolderPath)/UsrYacht/Schemas/UsrMinPriceToRequireYachtComment/UsrMinPriceToRequireYachtComment.cs" Condition="Exists('$(RelativePkgFolderPath)/UsrYacht/Schemas/UsrMinPriceToRequireYachtComment/UsrMinPriceToRequireYachtComment.cs')" />
 		<Compile Remove="$(RelativePkgFolderPath)/UsrYacht/Schemas/UsrTrafficLight/UsrTrafficLight.cs" Condition="Exists('$(RelativePkgFolderPath)/UsrYacht/Schemas/UsrTrafficLight/UsrTrafficLight.cs')" />
 		<Compile Remove="$(RelativePkgFolderPath)/UsrYacht/Schemas/UsrVwContactAgeDays/UsrVwContactAgeDays.cs" Condition="Exists('$(RelativePkgFolderPath)/UsrYacht/Schemas/UsrVwContactAgeDays/UsrVwContactAgeDays.cs')" />
 		<Compile Remove="$(RelativePkgFolderPath)/UsrYacht/Schemas/UsrYacht/UsrYacht.cs" Condition="Exists('$(RelativePkgFolderPath)/UsrYacht/Schemas/UsrYacht/UsrYacht.cs')" />
